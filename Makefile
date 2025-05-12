@@ -1,30 +1,33 @@
-# OBJS specifies which files to compile as part of the project
-OBJS = main.cpp entity.cpp collisions.cpp movement.cpp game.cpp gravity.cpp init.cpp render.cpp scaling.cpp \
-       timeline.cpp platform.cpp control.cpp property.hpp peer.cpp spawnpoint.cpp deathzone.cpp sideboundary.cpp \
-       event.hpp eventhandler.hpp collision_handler.cpp eventmanager.cpp control_handler.cpp death_handler.cpp \
-       sideboundary_handler.cpp
+# OBJS specifies which .cpp files to compile
+OBJS = main.cpp \
+       core/entity.cpp core/init.cpp core/game.cpp core/timeline.cpp \
+       modules/collisions.cpp modules/movement.cpp modules/gravity.cpp modules/deathzone.cpp \
+       modules/platform.cpp modules/sideboundary.cpp modules/spawnpoint.cpp \
+       handlers/collision_handler.cpp handlers/control_handler.cpp handlers/death_handler.cpp handlers/sideboundary_handler.cpp \
+       networking/peer.cpp \
+       rendering/render.cpp rendering/scaling.cpp \
+       core/eventmanager.cpp
 
-# CC specifies which compiler we're using
+# Compiler
 CC = g++
 
-# COMPILER_FLAGS specifies the additional compilation options we're using
-# -w suppresses all warnings
+# Compiler flags
 COMPILER_FLAGS = -g -w
 
-# LINKER_FLAGS specifies the libraries we're linking against
+# Linker flags
 LINKER_FLAGS = -lSDL2 -lzmq
 
-# OBJ_NAME specifies the name of our executable
+# Executable output name
 OBJ_NAME = main
 
-# This is the target that compiles our executable
+# Default target
 all: $(OBJ_NAME)
 
-# Rule to compile the object files and link them into the executable
+# Rule to build the executable
 $(OBJ_NAME): $(OBJS)
 	$(CC) $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
 
-# Rule to run the executable after building
+# Rules to run different modes
 run-server:
 	./$(OBJ_NAME) masterPeer
 
@@ -37,6 +40,6 @@ run-client2:
 run-client3:
 	./$(OBJ_NAME) peer4
 
-# Clean rule to remove generated files
+# Clean target to remove binaries
 clean:
 	rm -f $(OBJ_NAME)
