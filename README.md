@@ -19,17 +19,20 @@ Currently supports basic entity rendering, movement, simple physics, and event h
 
 ```
 2D-Game-Engine/
-├── core/             # Core engine systems (Entity, Event Manager, Game, Timeline, Initialization)
-├── handlers/         # Event handlers (Collision, Control, Death, Boundary)
-├── modules/          # Functional modules (Gravity, Movement, Spawnpoints, Platforms)
-├── networking/       # Multiplayer networking (Peer-to-Peer Communication)
-├── rendering/        # SDL2 rendering and scaling modules
-├── main.cpp          # Example usage: Bubble Shooter game
-├── space_invader.cpp # Another example: Early Space Invader prototype
-├── Makefile          # Build system
-├── LICENSE           # GNU GPL v2 License
-├── README.md         # Project documentation
-└── .gitignore        # Git ignore file
+├── include/            # All engine header files (Entity, Events, Game, Modules, Networking, Rendering)
+├── src/
+│   ├── core/           # Core engine systems (Entity, Event Manager, Game logic, Initialization, Timeline)
+│   ├── handlers/       # Event handlers (Collision, Control, Death, Side Boundary)
+│   ├── modules/        # Functional modules (Gravity, Movement, Spawnpoints, Platforms, Side Boundaries)
+│   ├── networking/     # Multiplayer networking (Peer-to-Peer Communication using ZeroMQ)
+│   ├── rendering/      # SDL2 rendering and dynamic scaling modules
+├── main.cpp            # Example: Bubble Shooter game (entry point)
+├── main2.cpp           # Another example: Space Invader prototype (alternate entry)
+├── Makefile            # Build system
+├── LICENSE             # Project License (MIT or GNU GPL depending)
+├── README.md           # Project documentation
+├── .gitignore          # Git ignore rules
+
 ```
 
 ---
