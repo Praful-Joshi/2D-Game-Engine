@@ -1,14 +1,85 @@
-# How to run
-1. In terminal type 
-```
-make clean && make && make run-server
-```
-which will compile, link and run the game engine's code for the main master peer node.
+# 2D Game Engine
 
-2. Depending on the number of clients you have, you type this to join as a peer (increase the number for the next client)
-```
-make clean && make && make run-client1
-```   
-4. It is important to note that this is the engine's code only. Each of the three team memebers will submit their own main.cpp file which you will have to replace in order to test each individual game. 
+A lightweight and raw 2D game engine written in C++ using SDL2 and ZeroMQ.  
+Currently supports basic entity rendering, movement, simple physics, and event handling.
 
-5. To test the scaling bonus please press T
+---
+
+## ✨ Features
+- Basic shape rendering (rectangles)
+- Entity management with attributes (movement, collision, gravity)
+- Event-driven updates (collision handling, control handling)
+- Basic multiplayer support with peer-to-peer networking via ZeroMQ
+- Proportional dynamic window scaling
+- Sample games included (Bubble Shooter, Space Invader prototype)
+
+---
+
+## 🏗️ Updated Project Structure
+
+```
+2D-Game-Engine/
+├── core/             # Core engine systems (Entity, Event Manager, Game, Timeline, Initialization)
+├── handlers/         # Event handlers (Collision, Control, Death, Boundary)
+├── modules/          # Functional modules (Gravity, Movement, Spawnpoints, Platforms)
+├── networking/       # Multiplayer networking (Peer-to-Peer Communication)
+├── rendering/        # SDL2 rendering and scaling modules
+├── main.cpp          # Example usage: Bubble Shooter game
+├── space_invader.cpp # Another example: Early Space Invader prototype
+├── Makefile          # Build system
+├── LICENSE           # GNU GPL v2 License
+├── README.md         # Project documentation
+└── .gitignore        # Git ignore file
+```
+
+---
+
+## 🛠️ How to Build & Run
+
+### Requirements:
+- C++17 compatible compiler (e.g., `g++`)
+- [SDL2](https://www.libsdl.org/download-2.0.php)
+- [ZeroMQ](https://zeromq.org/)
+
+### Building and Running:
+
+1. Open a terminal and compile the project:
+   ```bash
+   make clean && make
+   ```
+
+2. To run the sample Bubble Shooter game:
+   ```bash
+   ./main masterPeer
+   ```
+
+3. To run other test games (like Space Invader):
+   - Replace `main.cpp` with `space_invader.cpp` or modify `Makefile` to build different entry points manually.
+
+> 🔥 Note: The engine itself is minimalistic — actual games are written inside `main.cpp` or other .cpp files.
+
+### Controls:
+- `Arrow Keys` — Move player-controlled shapes
+- `Spacebar` — Shoot (in Bubble Shooter)
+- `T` — Toggle scaling mode (constant or proportional)
+- `P` — Pause/unpause the game
+- `S + H` — Shrink player entity temporarily
+- `Double tap arrow keys` — Quick teleportation
+- `1/2/3` — Change game speed
+
+---
+
+## 📄 Notes
+- This engine is still **in early/raw development**.
+- Ideal for **learning** purposes or for **rapid prototyping** of simple games.
+- Rendering currently supports **only basic shapes** (no textures or animations yet).
+- Games are **implemented manually** inside `main.cpp` by using engine APIs.
+
+---
+
+## ⚡ Credits
+- SDL2 for rendering
+- ZeroMQ for multiplayer communication
+- Licensed under GNU GPL v2
+
+---
