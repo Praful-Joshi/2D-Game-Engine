@@ -27,7 +27,6 @@ Currently supports basic entity rendering, movement, simple physics, and event h
 │   ├── networking/     # Multiplayer networking (Peer-to-Peer Communication using ZeroMQ)
 │   ├── rendering/      # SDL2 rendering and dynamic scaling modules
 ├── main.cpp            # Example: Bubble Shooter game (entry point)
-├── main2.cpp           # Another example: Space Invader prototype (alternate entry)
 ├── Makefile            # Build system
 ├── LICENSE             # Project License (MIT or GNU GPL depending)
 ├── README.md           # Project documentation
