@@ -15,7 +15,7 @@ Currently supports basic entity rendering, movement, simple physics, and event h
 
 ---
 
-## 🏗️ Updated Project Structure
+## 🏗️ Project Structure
 
 ```
 2D-Game-Engine/
