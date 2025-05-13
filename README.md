@@ -3,6 +3,10 @@
 A lightweight and raw 2D game engine written in C++ with Multiplayer(SDL2 & ZMQ) support. 
 Currently supports basic entity rendering, movement, simple physics, and event handling.
 
+<p align="center">
+  <img src="preview.gif" alt="Gameplay Preview" />
+</p>
+
 ---
 
 ## ✨ Features
