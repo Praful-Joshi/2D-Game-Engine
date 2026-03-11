@@ -1,7 +1,10 @@
 # 2D Game Engine
 
-A lightweight and raw 2D game engine written in C++ with Multiplayer(SDL2 & ZMQ) support. 
-Currently supports basic entity rendering, movement, simple physics, and event handling.
+A lightweight 2D game engine written in **C++17** with multiplayer support via SDL2 and ZeroMQ.
+Built as a graduate course project, now being actively developed toward professional standards.
+
+> **Status:** Early development — core loop, rendering, physics, and networking work.
+> Actively being refactored and extended.
 
 <p align="center">
   <img src="preview.gif" alt="Gameplay Preview" />
@@ -9,83 +12,121 @@ Currently supports basic entity rendering, movement, simple physics, and event h
 
 ---
 
-## ✨ Features
-- Basic shape rendering (rectangles)
-- Entity management with attributes (movement, collision, gravity)
-- Event-driven updates (collision handling, control handling)
-- Basic multiplayer support with peer-to-peer networking via ZeroMQ
-- Proportional dynamic window scaling
-- Sample games included (Bubble Shooter, Space Invader prototype)
+## Features
+
+- Rectangle-based entity rendering via SDL2
+- Entity management with movement, collision, and gravity
+- Event-driven architecture (collision, control, death, boundary handlers)
+- Peer-to-peer multiplayer via ZeroMQ
+- Dynamic proportional window scaling
+- Timeline system with pause, speed control, and anchor support
+- Sample games: Bubble Shooter, Space Invader prototype
 
 ---
 
-## 🏗️ Project Structure
+## Roadmap
 
+- [ ] Entity Component System (ECS) refactor
+- [ ] Sprite and texture rendering
+- [ ] Scene management
+- [ ] Tilemap support
+- [ ] Asset manager
+- [ ] Box2D physics integration
+- [ ] Lua scripting layer
+- [ ] Dear ImGui debug overlay
+
+---
+
+## Project Structure
 ```
 2D-Game-Engine/
-├── include/            # All engine header files (Entity, Events, Game, Modules, Networking, Rendering)
+├── include/              # All engine headers
 ├── src/
-│   ├── core/           # Core engine systems (Entity, Event Manager, Game logic, Initialization, Timeline)
-│   ├── handlers/       # Event handlers (Collision, Control, Death, Side Boundary)
-│   ├── modules/        # Functional modules (Gravity, Movement, Spawnpoints, Platforms, Side Boundaries)
-│   ├── networking/     # Multiplayer networking (Peer-to-Peer Communication using ZeroMQ)
-│   ├── rendering/      # SDL2 rendering and dynamic scaling modules
-├── main.cpp            # Example: Bubble Shooter game (entry point)
-├── Makefile            # Build system
-├── LICENSE             # Project License (MIT or GNU GPL depending)
-├── README.md           # Project documentation
-├── .gitignore          # Git ignore rules
-
+│   ├── core/             # Entity, EventManager, Game loop, Timeline
+│   ├── handlers/         # Collision, Control, Death, SideBoundary handlers
+│   ├── modules/          # Gravity, Movement, Platform, Spawnpoint, SideBoundary
+│   ├── networking/       # Peer-to-peer via ZeroMQ
+│   └── rendering/        # SDL2 renderer + dynamic scaling
+├── main.cpp              # Sample game entry point (Bubble Shooter)
+├── CMakeLists.txt        # Cross-platform build system
+├── .clang-format         # Code style (Google C++ style, 4-space indent)
+└── .vscode/              # VS Code tasks, settings, extension recommendations
 ```
 
 ---
 
-## 🛠️ How to Build & Run
+## Building & Running
 
-### Requirements:
-- C++17 compatible compiler (e.g., `g++`)
-- [SDL2](https://www.libsdl.org/download-2.0.php)
-- [ZeroMQ](https://zeromq.org/)
+### Prerequisites
 
-### Building and Running:
+| Dependency | Version | macOS | Linux (apt) | Windows |
+|---|---|---|---|---|
+| C++ compiler | C++17+ | Xcode CLT: `xcode-select --install` | `sudo apt install g++` | MSVC 2019+ or MinGW |
+| CMake | 3.16+ | `brew install cmake` | `sudo apt install cmake` | [cmake.org](https://cmake.org/download/) |
+| SDL2 | 2.x | `brew install sdl2` | `sudo apt install libsdl2-dev` | [libsdl.org](https://www.libsdl.org) |
+| ZeroMQ | 4.x | `brew install zeromq` | `sudo apt install libzmq3-dev` | `vcpkg install zeromq` |
+| cppzmq | any | `brew install cppzmq` | `sudo apt install libcppzmq-dev` | `vcpkg install cppzmq` |
+| Boost | 1.70+ | `brew install boost` | `sudo apt install libboost-dev` | `vcpkg install boost` |
 
-1. Open a terminal and compile the project:
-   ```bash
-   make clean && make
-   ```
+### macOS & Linux
+```bash
+git clone https://github.com/Praful-Joshi/2D-Game-Engine.git
+cd 2D-Game-Engine
+mkdir build && cd build
+cmake ..
+cmake --build . -j$(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
+./main masterPeer
+```
 
-2. To run the sample Bubble Shooter game:
-   ```bash
-   ./main masterPeer
-   ```
+### Windows (with vcpkg)
+```powershell
+git clone https://github.com/Praful-Joshi/2D-Game-Engine.git
+cd 2D-Game-Engine
 
-3. To run other test games (like Space Invader):
-   - Replace `main.cpp` with `space_invader.cpp` or modify `Makefile` to build different entry points manually.
+# Install dependencies via vcpkg
+vcpkg install sdl2 zeromq cppzmq boost
 
-> 🔥 Note: The engine itself is minimalistic — actual games are written inside `main.cpp` or other .cpp files.
+mkdir build && cd build
+cmake .. -DCMAKE_TOOLCHAIN_FILE=path\to\vcpkg\scripts\buildsystems\vcpkg.cmake
+cmake --build . --config Release
+.\Release\main.exe masterPeer
+```
 
-### Controls:
-- `Arrow Keys` — Move player-controlled shapes
-- `Spacebar` — Shoot (in Bubble Shooter)
-- `T` — Toggle scaling mode (constant or proportional)
-- `P` — Pause/unpause the game
-- `S + H` — Shrink player entity temporarily
-- `Double tap arrow keys` — Quick teleportation
-- `1/2/3` — Change game speed
+### VS Code
+
+Open the repo folder — you'll be prompted to install recommended extensions.
+- **Build:** `Cmd/Ctrl+Shift+B`
+- **Build & Run:** `Cmd/Ctrl+Shift+P` → "Tasks: Run Test Task"
+
+---
+
+## Controls (Bubble Shooter)
+
+| Key | Action |
+|---|---|
+| Arrow Keys | Move player |
+| Spacebar | Shoot |
+| P | Pause / unpause |
+| T | Toggle scaling mode |
+| 1 / 2 / 3 | Change game speed |
+| S + H | Shrink player temporarily |
+| Double-tap arrow | Quick teleport |
 
 ---
 
-## 📄 Notes
-- This engine is still **in early/raw development**.
-- Ideal for **learning** purposes or for **rapid prototyping** of simple games.
-- Rendering currently supports **only basic shapes** (no textures or animations yet).
-- Games are **implemented manually** inside `main.cpp` by using engine APIs.
+## Contributing
+
+1. Fork the repo and create a feature branch: `git checkout -b feature/your-feature`
+2. Follow the existing code style — clang-format runs automatically on save
+3. Build with `-Wall` and ensure zero warnings before submitting a PR
+4. Open a pull request with a clear description of what changed and why
 
 ---
 
-## ⚡ Credits
-- SDL2 for rendering
-- ZeroMQ for multiplayer communication
-- Licensed under GNU GPL v2
+## Credits
 
----
+- [SDL2](https://www.libsdl.org/) — rendering and input
+- [ZeroMQ](https://zeromq.org/) — peer-to-peer networking
+- [Boost](https://www.boost.org/) — property tree and utilities
+
+Licensed under [GNU GPL v2](LICENSE).

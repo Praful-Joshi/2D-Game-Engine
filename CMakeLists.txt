@@ -8,8 +8,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ── Find packages ──────────────────────────────────────────────────────────────
 find_package(SDL2 REQUIRED)
 
-# ZeroMQ — find the C++ header-only bindings (zmq.hpp) manually
-find_package(PkgConfig REQUIRED)
+# ZeroMQ
+find_package(PkgConfig)
+if(PkgConfig_FOUND)
+    pkg_check_modules(ZMQ REQUIRED libzmq)
+else()
+    # Fallback for Windows — expects ZMQ in a standard location
+    find_path(ZMQ_INCLUDE_DIRS zmq.hpp)
+    find_library(ZMQ_LIBRARIES NAMES zmq libzmq)
+    if(NOT ZMQ_INCLUDE_DIRS OR NOT ZMQ_LIBRARIES)
+        message(FATAL_ERROR "ZeroMQ not found. On Windows, install via vcpkg: vcpkg install zeromq cppzmq")
+    endif()
+endif()
 # After the existing find_package lines
 find_package(Boost REQUIRED)
 pkg_check_modules(ZMQ REQUIRED libzmq)
