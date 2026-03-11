@@ -11,4 +11,4 @@ public:
     void update(Entity& entity, Game& game) override;
 };
 
-#endif // SPAWN_POINT_ATTRIBUTE_HPP
+#endif  // SPAWN_POINT_ATTRIBUTE_HPP

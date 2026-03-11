@@ -9,8 +9,9 @@ class SideBoundaryAttribute : public Attribute {
 public:
     SideBoundaryAttribute(bool isLeft) : isLeftBoundary(isLeft) {}
     void update(Entity& entity, Game& game) override;
+
 private:
     bool isLeftBoundary;
 };
 
-#endif // SIDE_BOUNDARY_ATTRIBUTE_HPP
+#endif  // SIDE_BOUNDARY_ATTRIBUTE_HPP

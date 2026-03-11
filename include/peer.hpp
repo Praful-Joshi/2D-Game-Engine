@@ -16,4 +16,4 @@ private:
     zmq::socket_t subscriber;
 };
 
-#endif // PEER_HPP
+#endif  // PEER_HPP

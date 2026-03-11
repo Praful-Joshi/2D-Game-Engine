@@ -1,4 +1,5 @@
 #include "movement.hpp"
+
 #include <iostream>
 void MovementAttribute::update(Entity& entity, Game& game) {
     Timeline* timeline = game.getTimeline();
@@ -10,14 +11,15 @@ void MovementAttribute::update(Entity& entity, Game& game) {
     last_time = elapsed_time;
 
     // Check if the entity is a platform
-    auto *platform = dynamic_cast<Platform*>(&entity);
+    auto* platform = dynamic_cast<Platform*>(&entity);
     if (platform) {
         platform->update(delta_time);
         return;  // Skip further processing for platforms
     }
 
     // Skip entities without movement
-    if ((entity.getVelocityX() == 0.0 && entity.getVelocityY() == 0.0 && !entity.getHasGravity()) || !entity.getisMovable()) {
+    if ((entity.getVelocityX() == 0.0 && entity.getVelocityY() == 0.0 && !entity.getHasGravity()) ||
+        !entity.getisMovable()) {
         return;
     }
 

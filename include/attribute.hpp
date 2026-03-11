@@ -13,4 +13,4 @@ public:
     virtual void update(Entity& entity, Game& game) = 0;
 };
 
-#endif // ATTRIBUTE_HPP
+#endif  // ATTRIBUTE_HPP

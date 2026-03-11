@@ -1,11 +1,12 @@
 #ifndef EVENTMANAGER_HPP
 #define EVENTMANAGER_HPP
 
-#include "eventhandler.hpp"
 #include <list>
+#include <map>
 #include <mutex>
 #include <queue>
-#include <map>
+
+#include "eventhandler.hpp"
 
 class EventManager {
 public:

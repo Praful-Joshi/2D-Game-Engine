@@ -11,4 +11,4 @@ public:
     void update(Entity& entity, Game& game) override;
 };
 
-#endif // GRAVITY_ATTRIBUTE_HPP
+#endif  // GRAVITY_ATTRIBUTE_HPP

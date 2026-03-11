@@ -1,25 +1,26 @@
-#include "game.hpp"
-#include "timeline.hpp"
-#include "property.hpp"
-#include "init.hpp"
-#include "render.hpp"
-#include "control.hpp"
-#include "movement.hpp"
-#include "gravity.hpp"
-#include "collisions.hpp"
-#include "spawnpoint.hpp"
-#include "deathzone.hpp"
-#include "sideboundary.hpp"
+#include <atomic>
 #include <iostream>
 #include <sstream>
-#include "peer.hpp"
 #include <thread>
-#include <atomic>
-#include "platform.hpp"
-#include "control_handler.hpp"
+
 #include "collision_handler.hpp"
+#include "collisions.hpp"
+#include "control.hpp"
+#include "control_handler.hpp"
 #include "death_handler.hpp"
+#include "deathzone.hpp"
+#include "game.hpp"
+#include "gravity.hpp"
+#include "init.hpp"
+#include "movement.hpp"
+#include "peer.hpp"
+#include "platform.hpp"
+#include "property.hpp"
+#include "render.hpp"
+#include "sideboundary.hpp"
 #include "sideboundary_handler.hpp"
+#include "spawnpoint.hpp"
+#include "timeline.hpp"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -36,13 +37,22 @@ void createBubbleGrid(Game& game) {
             BubbleColor color = static_cast<BubbleColor>(rand() % 3);
             SDL_Color sdlColor;
             switch (color) {
-            case RED: sdlColor = { 255, 0, 0, 255 }; break;
-            case BLUE: sdlColor = { 0, 0, 255, 255 }; break;
-            case GREEN: sdlColor = { 0, 255, 0, 255 }; break;
+                case RED:
+                    sdlColor = {255, 0, 0, 255};
+                    break;
+                case BLUE:
+                    sdlColor = {0, 0, 255, 255};
+                    break;
+                case GREEN:
+                    sdlColor = {0, 255, 0, 255};
+                    break;
             }
-            auto bubble = std::make_shared<Entity>(col * BUBBLE_SIZE, row * BUBBLE_SIZE, BUBBLE_SIZE, BUBBLE_SIZE, sdlColor, 0, 0, false, false, false, 1, 1);
+            auto bubble =
+                std::make_shared<Entity>(col * BUBBLE_SIZE, row * BUBBLE_SIZE, BUBBLE_SIZE,
+                                         BUBBLE_SIZE, sdlColor, 0, 0, false, false, false, 1, 1);
             game.addEntity(bubble);
-            game.addProperty(Property::Collide, bubble->getEntityID(), std::make_shared<CollisionAttribute>());
+            game.addProperty(Property::Collide, bubble->getEntityID(),
+                             std::make_shared<CollisionAttribute>());
         }
     }
 }
@@ -56,22 +66,27 @@ int main(int argc, char* args[]) {
 
     EventManager eventManager;
     CollisionHandler collisionHandler;
-    ControlHandler   controlHandler;
+    ControlHandler controlHandler;
     game.setEventManager(eventManager);
 
     // Register the handlers for events
     eventManager.registerHandler(EventType::COLLISION, &collisionHandler);
     eventManager.registerHandler(EventType::CONTROL, &controlHandler);
 
-    SDL_Window* window = SDL_CreateWindow("Bubble Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window* window =
+        SDL_CreateWindow("Bubble Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     createBubbleGrid(game);
 
     // Create cannon
-    auto cannon = std::make_shared<Entity>(SCREEN_WIDTH / 2 - CANNON_WIDTH / 2, SCREEN_HEIGHT - CANNON_HEIGHT, CANNON_WIDTH, CANNON_HEIGHT, SDL_Color{ 200, 200, 200, 255 }, 0, 0, false, true, true, 2, 1);
+    auto cannon = std::make_shared<Entity>(
+        SCREEN_WIDTH / 2 - CANNON_WIDTH / 2, SCREEN_HEIGHT - CANNON_HEIGHT, CANNON_WIDTH,
+        CANNON_HEIGHT, SDL_Color{200, 200, 200, 255}, 0, 0, false, true, true, 2, 1);
     game.addEntity(cannon);
-    game.addProperty(Property::Control, cannon->getEntityID(), std::make_shared<ControlAttribute>());
+    game.addProperty(Property::Control, cannon->getEntityID(),
+                     std::make_shared<ControlAttribute>());
     game.addProperty(Property::Move, cannon->getEntityID(), std::make_shared<MovementAttribute>());
 
     SDL_Event e;
@@ -80,32 +95,41 @@ int main(int argc, char* args[]) {
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 quit = true;
-            }
-            else if (e.type == SDL_KEYDOWN) {
+            } else if (e.type == SDL_KEYDOWN) {
                 switch (e.key.keysym.sym) {
-                case SDLK_LEFT:
-                    cannon->setVelocityX(-5);
-                    break;
-                case SDLK_RIGHT:
-                    cannon->setVelocityX(5);
-                    break;
-                case SDLK_SPACE:
-                    // Shoot bubble
-                    BubbleColor color = static_cast<BubbleColor>(rand() % 3);
-                    SDL_Color bulletColor;
-                    switch (color) {
-                    case RED: bulletColor = { 255, 0, 0, 255 }; break;
-                    case BLUE: bulletColor = { 0, 0, 255, 255 }; break;
-                    case GREEN: bulletColor = { 0, 255, 0, 255 }; break;
-                    }
-                    auto bullet = std::make_shared<Entity>(cannon->getRect().x + CANNON_WIDTH / 2 - BULLET_SIZE / 2, cannon->getRect().y - BULLET_SIZE, BULLET_SIZE, BULLET_SIZE, bulletColor, 0, -5, false, true, false, 3, 1);
-                    game.addEntity(bullet);
-                    game.addProperty(Property::Move, bullet->getEntityID(), std::make_shared<MovementAttribute>());
-                    game.addProperty(Property::Collide, bullet->getEntityID(), std::make_shared<CollisionAttribute>());
-                    break;
+                    case SDLK_LEFT:
+                        cannon->setVelocityX(-5);
+                        break;
+                    case SDLK_RIGHT:
+                        cannon->setVelocityX(5);
+                        break;
+                    case SDLK_SPACE:
+                        // Shoot bubble
+                        BubbleColor color = static_cast<BubbleColor>(rand() % 3);
+                        SDL_Color bulletColor;
+                        switch (color) {
+                            case RED:
+                                bulletColor = {255, 0, 0, 255};
+                                break;
+                            case BLUE:
+                                bulletColor = {0, 0, 255, 255};
+                                break;
+                            case GREEN:
+                                bulletColor = {0, 255, 0, 255};
+                                break;
+                        }
+                        auto bullet = std::make_shared<Entity>(
+                            cannon->getRect().x + CANNON_WIDTH / 2 - BULLET_SIZE / 2,
+                            cannon->getRect().y - BULLET_SIZE, BULLET_SIZE, BULLET_SIZE,
+                            bulletColor, 0, -5, false, true, false, 3, 1);
+                        game.addEntity(bullet);
+                        game.addProperty(Property::Move, bullet->getEntityID(),
+                                         std::make_shared<MovementAttribute>());
+                        game.addProperty(Property::Collide, bullet->getEntityID(),
+                                         std::make_shared<CollisionAttribute>());
+                        break;
                 }
-            }
-            else if (e.type == SDL_KEYUP) {
+            } else if (e.type == SDL_KEYUP) {
                 if (e.key.keysym.sym == SDLK_LEFT || e.key.keysym.sym == SDLK_RIGHT) {
                     cannon->setVelocityX(0);
                 }
@@ -120,7 +144,8 @@ int main(int argc, char* args[]) {
         SDL_RenderClear(renderer);
 
         for (const auto& [entityID, entity] : game.getEntities()) {
-            SDL_SetRenderDrawColor(renderer, entity->getColor().r, entity->getColor().g, entity->getColor().b, entity->getColor().a);
+            SDL_SetRenderDrawColor(renderer, entity->getColor().r, entity->getColor().g,
+                                   entity->getColor().b, entity->getColor().a);
             SDL_Rect rect = entity->getRect();
             SDL_RenderFillRect(renderer, &rect);
         }
@@ -186,7 +211,6 @@ int main(int argc, char* args[]) {
 //     }
 // }
 
-
 // void runPeer() {
 //     Peer peer(isServer, clientID);
 //     std::cout << "Peer is running\n";
@@ -201,28 +225,32 @@ int main(int argc, char* args[]) {
 //     // Initialize common game entities
 //     if (isServer)
 //     {
-//         std::shared_ptr<Entity> wallLeft = std::make_shared<Entity>(500, 700, 500, 500, SDL_Color{ 0,0,0,255 }, 0, 0, false, false, false, 5, clientID);
+//         std::shared_ptr<Entity> wallLeft = std::make_shared<Entity>(500, 700, 500, 500,
+//         SDL_Color{ 0,0,0,255 }, 0, 0, false, false, false, 5, clientID);
 //         game.addEntity(wallLeft);
 //         game.addProperty(Property::Collide, 5, std::make_shared<CollisionAttribute>());
 
-//         std::shared_ptr<Entity> wallRight = std::make_shared<Entity>(1200, 700, 400, 300, SDL_Color{ 155,230,0,255 }, 0, 0, false, false, false, 6, clientID);
+//         std::shared_ptr<Entity> wallRight = std::make_shared<Entity>(1200, 700, 400, 300,
+//         SDL_Color{ 155,230,0,255 }, 0, 0, false, false, false, 6, clientID);
 //         game.addEntity(wallRight);
 //         game.addProperty(Property::Collide, 6, std::make_shared<CollisionAttribute>());
 
-//         std::shared_ptr<Platform> movingPlatform1 = std::make_shared<Platform>(500, 300, 150, 50, SDL_Color{ 0,0,0,255 }, 0, 1, false, 7, clientID, 500, 900, 0, 0);
+//         std::shared_ptr<Platform> movingPlatform1 = std::make_shared<Platform>(500, 300, 150, 50,
+//         SDL_Color{ 0,0,0,255 }, 0, 1, false, 7, clientID, 500, 900, 0, 0);
 //         game.addEntity(movingPlatform1);
 // 		game.addProperty(Property::Collide, 7, std::make_shared<CollisionAttribute>());
 // 		game.addProperty(Property::Move, 7, std::make_shared<MovementAttribute>());
 
-//         std::shared_ptr<Platform> movingPlatform2 = std::make_shared<Platform>(1500, 300, 150, 50, SDL_Color{ 100,100,20,255 }, 1, 0, false, 8, clientID, 0, 0, 300, 600);
+//         std::shared_ptr<Platform> movingPlatform2 = std::make_shared<Platform>(1500, 300, 150,
+//         50, SDL_Color{ 100,100,20,255 }, 1, 0, false, 8, clientID, 0, 0, 300, 600);
 //         game.addEntity(movingPlatform2);
 //         game.addProperty(Property::Collide, 8, std::make_shared<CollisionAttribute>());
 //         game.addProperty(Property::Move, 8, std::make_shared<MovementAttribute>());
 //     }
 
 // 	//initialize player specific entities
-//     std::shared_ptr<Entity> player = std::make_shared<Entity>(myPlayerPos, 100, 50, 50, myPlayerColor, 0, 0, true, true, true, clientID, clientID);
-//     game.addEntity(player);
+//     std::shared_ptr<Entity> player = std::make_shared<Entity>(myPlayerPos, 100, 50, 50,
+//     myPlayerColor, 0, 0, true, true, true, clientID, clientID); game.addEntity(player);
 //     game.addProperty(Property::Collide, clientID, std::make_shared<CollisionAttribute>());
 //     game.addProperty(Property::Control, clientID, std::make_shared<ControlAttribute>());
 //     game.addProperty(Property::Gravity, clientID, std::make_shared<GravityAttribute>());
@@ -246,7 +274,6 @@ int main(int argc, char* args[]) {
 //     bool quit = false;
 //     SDL_Event e;
 
-
 //     while (!quit) {
 //         // Handle events on queue
 //         while (SDL_PollEvent(&e) != 0) {
@@ -257,17 +284,19 @@ int main(int argc, char* args[]) {
 //                 {
 //                     player->setClientID(-1);
 //                     std::vector<std::string> temp = game.serializeEntitiesClientSide(game);
-//                     std::string debugMessage = "sent data size: " + std::to_string(temp.size()) + "\n";
-//                     // OutputDebugString(debugMessage.c_str());  // This will print in the Debug window
-//                     if(temp.size() > 0) peer.send_data(temp);
+//                     std::string debugMessage = "sent data size: " + std::to_string(temp.size()) +
+//                     "\n";
+//                     // OutputDebugString(debugMessage.c_str());  // This will print in the Debug
+//                     window if(temp.size() > 0) peer.send_data(temp);
 //                 }
 //                 else
 //                 {
 //                     player->setClientID(-2);
 //                     std::vector<std::string> temp = game.serializeEntitiesServerSide(game);
-//                     std::string debugMessage = "sent data size: " + std::to_string(temp.size()) + "\n";
-//                     // OutputDebugString(debugMessage.c_str());  // This will print in the Debug window
-//                     if (temp.size() > 0) peer.send_data(temp);
+//                     std::string debugMessage = "sent data size: " + std::to_string(temp.size()) +
+//                     "\n";
+//                     // OutputDebugString(debugMessage.c_str());  // This will print in the Debug
+//                     window if (temp.size() > 0) peer.send_data(temp);
 //                 }
 //                 game.removeEntity(player);
 //             }
@@ -319,8 +348,8 @@ int main(int argc, char* args[]) {
 
 // int main(int argc, char* argv[]) {
 //     if (argc < 2) {
-//         std::cerr << "Usage: " << argv[0] << " <server|client|peer> [bindAddress] [connectAddress]" << std::endl;
-//         return EXIT_FAILURE;
+//         std::cerr << "Usage: " << argv[0] << " <server|client|peer> [bindAddress]
+//         [connectAddress]" << std::endl; return EXIT_FAILURE;
 //     }
 
 //     std::string mode = argv[1];

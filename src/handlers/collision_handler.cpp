@@ -1,12 +1,12 @@
 #include "collision_handler.hpp"
 
-void CollisionHandler::onEvent(const Event &event) {
-    if(event.type == EventType::COLLISION) {
+void CollisionHandler::onEvent(const Event& event) {
+    if (event.type == EventType::COLLISION) {
         updateGameState(*event.context.entity, *event.context.game);
     }
 }
 
-void CollisionHandler::updateGameState(Entity &entity, Game &game) {
+void CollisionHandler::updateGameState(Entity& entity, Game& game) {
     // Iterate through all entities in the game
     auto gameEntities = game.getEntities();
     for (const auto& [otherEntityId, otherEntityPtr] : gameEntities) {
@@ -19,7 +19,7 @@ void CollisionHandler::updateGameState(Entity &entity, Game &game) {
     }
 }
 
-void CollisionHandler::resolveCollision(Entity &entityA, Entity &entityB) {
+void CollisionHandler::resolveCollision(Entity& entityA, Entity& entityB) {
     // Collision resolution logic here
     // Example: Adjust positions based on collision response
     SDL_Rect& rectA = entityA.getRect();

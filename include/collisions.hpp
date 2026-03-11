@@ -5,7 +5,6 @@
 #include "eventmanager.hpp"
 #include "game.hpp"
 
-
 class CollisionAttribute : public Attribute {
 public:
     void update(Entity& entity, Game& game) override;

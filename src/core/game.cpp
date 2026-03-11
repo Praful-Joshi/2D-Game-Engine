@@ -1,6 +1,8 @@
 #include "game.hpp"
+
 #include <mutex>
 #include <utility>
+
 #include "peer.hpp"
 
 struct EntityState {
@@ -12,32 +14,23 @@ struct EntityState {
 std::unordered_map<int, EntityState> previousEntityStates;
 
 void Game::addEntity(const std::shared_ptr<Entity>& entity) {
-    int entityID = entity->getEntityID(); // Assuming Entity has this method
-    entities[entityID] = entity; // Store the entity by its ID
+    int entityID = entity->getEntityID();  // Assuming Entity has this method
+    entities[entityID] = entity;           // Store the entity by its ID
 }
 
-void Game::updatePreviousEntityStates(Game& game)
-{
+void Game::updatePreviousEntityStates(Game& game) {
     auto gameEntities = game.getEntities();
-	for (const auto& [entityID, entity] : gameEntities) {
-		previousEntityStates[entityID] = EntityState{
-			entity->getRect().x,
-			entity->getRect().y,
-			entity->getRect().w,
-			entity->getRect().h,
-			entity->getClientID(),
-			entity->getVelocityX(),
-			entity->getVelocityY(),
-			entity->getHasGravity(),
-			entity->getisMovable(),
-			entity->getIsControllable(),
-			entity->getColor()
-		};
-	}
+    for (const auto& [entityID, entity] : gameEntities) {
+        previousEntityStates[entityID] = EntityState{
+            entity->getRect().x,         entity->getRect().y,     entity->getRect().w,
+            entity->getRect().h,         entity->getClientID(),   entity->getVelocityX(),
+            entity->getVelocityY(),      entity->getHasGravity(), entity->getisMovable(),
+            entity->getIsControllable(), entity->getColor()};
+    }
 }
 
 void Game::removeEntity(const std::shared_ptr<Entity>& entity) {
-	entities.erase(entity->getEntityID());
+    entities.erase(entity->getEntityID());
 }
 
 // Property management
@@ -59,11 +52,11 @@ void Game::updateProperties(Property propertyType, Timeline* timeline) {
 }
 
 std::shared_ptr<Entity> Game::getEntity(const int& GUID) {
-    auto it = entities.find(GUID); // Find the entity with the specified GUID
+    auto it = entities.find(GUID);  // Find the entity with the specified GUID
     if (it != entities.end()) {
-        return it->second; // Return the shared_ptr to the entity
+        return it->second;  // Return the shared_ptr to the entity
     }
-    return nullptr; // Return nullptr if the entity is not found
+    return nullptr;  // Return nullptr if the entity is not found
 }
 
 bool Game::entityHasProperty(Property propertyType, int entityId) const {
@@ -72,7 +65,7 @@ bool Game::entityHasProperty(Property propertyType, int entityId) const {
         const auto& entityMap = propertyIt->second;
         return entityMap.find(entityId) != entityMap.end();
     }
-    return false; // Property or entity ID not found
+    return false;  // Property or entity ID not found
 }
 
 std::vector<std::string> Game::serializeEntitiesServerSide(Game& game) {
@@ -85,31 +78,27 @@ std::vector<std::string> Game::serializeEntitiesServerSide(Game& game) {
 
         // Get current state
         auto currentState = EntityState{
-            entity->getRect().x,
-            entity->getRect().y,
-            entity->getRect().w,
-            entity->getRect().h,
-			entity->getClientID(),
-            entity->getVelocityX(),
-            entity->getVelocityY(),
-            entity->getHasGravity(),
-            entity->getisMovable(),
-            entity->getIsControllable(),
-            entity->getColor()
-        };
-        if (useEfficientCommunication && didAllPlayersJoin)
-        {
+            entity->getRect().x,         entity->getRect().y,     entity->getRect().w,
+            entity->getRect().h,         entity->getClientID(),   entity->getVelocityX(),
+            entity->getVelocityY(),      entity->getHasGravity(), entity->getisMovable(),
+            entity->getIsControllable(), entity->getColor()};
+        if (useEfficientCommunication && didAllPlayersJoin) {
             bool stateChanged = true;
             const auto& prevState = previousEntityStates[entityID];
-            stateChanged = (prevState.x != currentState.x || prevState.y != currentState.y ||
-				prevState.width != currentState.width || prevState.height != currentState.height || prevState.clientID != currentState.clientID ||
-                prevState.velocityX != currentState.velocityX || prevState.velocityY != currentState.velocityY ||
-                prevState.hasGravity != currentState.hasGravity || prevState.isMovable != currentState.isMovable ||
-                prevState.isControllable != currentState.isControllable ||
-                prevState.color.r != currentState.color.r || prevState.color.g != currentState.color.g ||
-                prevState.color.b != currentState.color.b || prevState.color.a != currentState.color.a);
-            if (stateChanged)
-            {
+            stateChanged =
+                (prevState.x != currentState.x || prevState.y != currentState.y ||
+                 prevState.width != currentState.width || prevState.height != currentState.height ||
+                 prevState.clientID != currentState.clientID ||
+                 prevState.velocityX != currentState.velocityX ||
+                 prevState.velocityY != currentState.velocityY ||
+                 prevState.hasGravity != currentState.hasGravity ||
+                 prevState.isMovable != currentState.isMovable ||
+                 prevState.isControllable != currentState.isControllable ||
+                 prevState.color.r != currentState.color.r ||
+                 prevState.color.g != currentState.color.g ||
+                 prevState.color.b != currentState.color.b ||
+                 prevState.color.a != currentState.color.a);
+            if (stateChanged) {
                 tree.put("EntityID", entity->getEntityID());
                 tree.put("ClientID", entity->getClientID());
                 tree.put("x", entity->getRect().x);
@@ -132,9 +121,7 @@ std::vector<std::string> Game::serializeEntitiesServerSide(Game& game) {
                 jsonStrings.push_back(buf.str());
                 previousEntityStates[entityID] = currentState;
                 continue;
-            }
-            else
-            {
+            } else {
                 continue;
             }
         }
@@ -148,13 +135,12 @@ std::vector<std::string> Game::serializeEntitiesServerSide(Game& game) {
         tree.put("velocityX", entity->getVelocityX());
         tree.put("velocityY", entity->getVelocityY());
         tree.put("hasGravity", entity->getHasGravity());
-        tree.put("isMovable",entity->getisMovable());
+        tree.put("isMovable", entity->getisMovable());
         tree.put("isControllable", false);
         tree.put("color.r", entity->getColor().r);
         tree.put("color.b", entity->getColor().b);
         tree.put("color.g", entity->getColor().g);
         tree.put("color.a", entity->getColor().a);
-
 
         // Convert ptree to a JSON string
         std::ostringstream buf;
@@ -166,14 +152,13 @@ std::vector<std::string> Game::serializeEntitiesServerSide(Game& game) {
     return jsonStrings;
 }
 
-
 std::vector<std::string> Game::serializeEntitiesClientSide(Game& game) {
     std::vector<std::string> jsonStrings;
     std::mutex game_entities_mutex;
     game_entities_mutex.lock();
     auto gameEntities = game.getEntities();
     for (const auto& [entityID, entity] : gameEntities) {
-        if(entity->getIsControllable()){
+        if (entity->getIsControllable()) {
             boost::property_tree::ptree tree;
             tree.put("EntityID", entity->getEntityID());
             tree.put("ClientID", entity->getClientID());
@@ -184,7 +169,7 @@ std::vector<std::string> Game::serializeEntitiesClientSide(Game& game) {
             tree.put("velocityX", entity->getVelocityX());
             tree.put("velocityY", entity->getVelocityY());
             tree.put("hasGravity", entity->getHasGravity());
-            tree.put("isMovable",entity->getisMovable());
+            tree.put("isMovable", entity->getisMovable());
             tree.put("isControllable", entity->getIsControllable());
             tree.put("color.r", entity->getColor().r);
             tree.put("color.b", entity->getColor().b);
@@ -201,7 +186,8 @@ std::vector<std::string> Game::serializeEntitiesClientSide(Game& game) {
     return jsonStrings;
 }
 
-void Game::deserializeEntitiesServerSide(const std::vector<std::string>& jsons, Game& game, Peer& peer) {
+void Game::deserializeEntitiesServerSide(const std::vector<std::string>& jsons, Game& game,
+                                         Peer& peer) {
     std::mutex game_entities_mutex;
     game_entities_mutex.lock();
     for (const auto& json : jsons) {
@@ -225,12 +211,10 @@ void Game::deserializeEntitiesServerSide(const std::vector<std::string>& jsons, 
         bool isMovable = tree.get<bool>("isMovable");
 
         // Extract color values
-        SDL_Color color = {
-                static_cast<Uint8>(tree.get<int>("color.r")),
-                static_cast<Uint8>(tree.get<int>("color.g")),
-                static_cast<Uint8>(tree.get<int>("color.b")),
-                static_cast<Uint8>(tree.get<int>("color.a"))
-        };
+        SDL_Color color = {static_cast<Uint8>(tree.get<int>("color.r")),
+                           static_cast<Uint8>(tree.get<int>("color.g")),
+                           static_cast<Uint8>(tree.get<int>("color.b")),
+                           static_cast<Uint8>(tree.get<int>("color.a"))};
 
         auto gameEntities = game.getEntities();
 
@@ -248,32 +232,31 @@ void Game::deserializeEntitiesServerSide(const std::vector<std::string>& jsons, 
             entity->setHasGravity(hasGravity);
             entity->setIsMovable(isMovable);
             entity->setIsControllable(false);
-        }
-        else {
+        } else {
             // Create new entity if it doesn't exist
-            auto newEntity = std::make_shared<Entity>(x, y, width, height, color, velocityX, velocityY, hasGravity, false, isMovable, EntityID, ClientID);
+            auto newEntity =
+                std::make_shared<Entity>(x, y, width, height, color, velocityX, velocityY,
+                                         hasGravity, false, isMovable, EntityID, ClientID);
             game.addEntity(newEntity);
             game.addProperty(Property::Collide, EntityID, std::make_shared<CollisionAttribute>());
-			if (hasGravity) {
-				game.addProperty(Property::Gravity, EntityID, std::make_shared<GravityAttribute>());
-			}
-			if (isControllable) {
-				game.addProperty(Property::Control, EntityID, std::make_shared<ControlAttribute>());
-			}
+            if (hasGravity) {
+                game.addProperty(Property::Gravity, EntityID, std::make_shared<GravityAttribute>());
+            }
+            if (isControllable) {
+                game.addProperty(Property::Control, EntityID, std::make_shared<ControlAttribute>());
+            }
             if (isMovable) {
                 game.addProperty(Property::Move, EntityID, std::make_shared<MovementAttribute>());
             }
         }
 
-        if (ClientID == noPlayersJoining && !didAllPlayersJoin)
-		{
-			didAllPlayersJoin = true;
+        if (ClientID == noPlayersJoining && !didAllPlayersJoin) {
+            didAllPlayersJoin = true;
         }
 
-        if (ClientID == -1)
-        {
+        if (ClientID == -1) {
             if (gameEntities.find(EntityID) != gameEntities.end()) {
-                //this entity is present locally
+                // this entity is present locally
                 peer.send_data(game.serializeEntitiesServerSide(game));
                 game.removeEntity(game.getEntity(EntityID));
             }
@@ -282,8 +265,8 @@ void Game::deserializeEntitiesServerSide(const std::vector<std::string>& jsons, 
     game_entities_mutex.unlock();
 }
 
-
-void Game::deserializeEntitiesClientSide(const std::vector<std::string>& jsons, Game& game, Peer& peer) {
+void Game::deserializeEntitiesClientSide(const std::vector<std::string>& jsons, Game& game,
+                                         Peer& peer) {
     std::mutex game_entities_mutex;
     game_entities_mutex.lock();
     auto gameEntities = game.getEntities();
@@ -297,20 +280,17 @@ void Game::deserializeEntitiesClientSide(const std::vector<std::string>& jsons, 
         // Extract values
         int EntityID = tree.get<int>("EntityID");
         int ClientID = tree.get<int>("ClientID");
-        if (ClientID == -1)
-        {
+        if (ClientID == -1) {
             if (gameEntities.find(EntityID) != gameEntities.end()) {
-                //this entity is present locally
+                // this entity is present locally
                 game.removeEntity(game.getEntity(EntityID));
                 continue;
             }
         }
-        if (ClientID == -2)
-        {
-            //server left make new server
-            if (game.ClientID == EntityID + 1)
-            {
-                //make this instance server
+        if (ClientID == -2) {
+            // server left make new server
+            if (game.ClientID == EntityID + 1) {
+                // make this instance server
                 peer = Peer(true, game.ClientID);
                 game.removeEntity(game.getEntity(EntityID));
             }
@@ -326,12 +306,10 @@ void Game::deserializeEntitiesClientSide(const std::vector<std::string>& jsons, 
         bool isMovable = tree.get<bool>("isMovable");
 
         // Extract color values
-        SDL_Color color = {
-                static_cast<Uint8>(tree.get<int>("color.r")),
-                static_cast<Uint8>(tree.get<int>("color.g")),
-                static_cast<Uint8>(tree.get<int>("color.b")),
-                static_cast<Uint8>(tree.get<int>("color.a"))
-        };
+        SDL_Color color = {static_cast<Uint8>(tree.get<int>("color.r")),
+                           static_cast<Uint8>(tree.get<int>("color.g")),
+                           static_cast<Uint8>(tree.get<int>("color.b")),
+                           static_cast<Uint8>(tree.get<int>("color.a"))};
 
         if (gameEntities.find(EntityID) != gameEntities.end()) {
             // Update existing entity
@@ -347,14 +325,14 @@ void Game::deserializeEntitiesClientSide(const std::vector<std::string>& jsons, 
             entity->setIsMovable(isMovable);
             if (entity->getClientID() == game.ClientID) {
                 entity->setIsControllable(true);  // Allow control for the current client
-            }
-            else {
+            } else {
                 entity->setIsControllable(false);  // Disable control for other clients
             }
-        }
-        else {
+        } else {
             // Create a new entity
-            auto newEntity = std::make_shared<Entity>(x, y, width, height, color, velocityX, velocityY, hasGravity, false, isMovable, EntityID, ClientID);
+            auto newEntity =
+                std::make_shared<Entity>(x, y, width, height, color, velocityX, velocityY,
+                                         hasGravity, false, isMovable, EntityID, ClientID);
             game.addEntity(newEntity);
             game.addProperty(Property::Collide, EntityID, std::make_shared<CollisionAttribute>());
             if (hasGravity) {

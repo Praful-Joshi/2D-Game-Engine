@@ -5,13 +5,13 @@
 #include "game.hpp"
 
 class DeathHandler : public EventHandler {
-    public:
-        DeathHandler() = default;
-        ~DeathHandler() override = default;
-        void onEvent(const Event& event) override;
+public:
+    DeathHandler() = default;
+    ~DeathHandler() override = default;
+    void onEvent(const Event& event) override;
 
-    private:
-        void updateGameState(Entity& entity, Game& game);
+private:
+    void updateGameState(Entity& entity, Game& game);
 };
 
 #endif

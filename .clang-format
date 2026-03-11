@@ -1,0 +1,18 @@
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 100
+AccessModifierOffset: -4
+
+# Braces
+BreakBeforeBraces: Attach
+
+# Includes
+SortIncludes: CaseInsensitive
+IncludeBlocks: Regroup
+
+# Spacing
+SpaceBeforeParens: ControlStatements
+SpacesInAngles: Never
+
+# Modern C++
+Standard: c++17

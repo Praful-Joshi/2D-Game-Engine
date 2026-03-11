@@ -1,12 +1,12 @@
 #include "death_handler.hpp"
 
-void DeathHandler::onEvent(const Event &event) {
-    if(event.type == EventType::DEATH) {
+void DeathHandler::onEvent(const Event& event) {
+    if (event.type == EventType::DEATH) {
         updateGameState(*event.context.entity, *event.context.game);
     }
 }
 
-void DeathHandler::updateGameState(Entity &entity, Game &game) {
+void DeathHandler::updateGameState(Entity& entity, Game& game) {
     auto entities = game.getEntities();
     auto spawnPointId = entity.getSpawnPointId();
     auto originalPositions = game.getOriginalPositions();
@@ -30,7 +30,8 @@ void DeathHandler::updateGameState(Entity &entity, Game &game) {
             // Find the specified spawn point and teleport the control entity
             auto spawnEntity = game.getEntity(spawnPointId);
             if (spawnEntity) {
-                // std::cout << "Teleporting control entity to spawn point and resetting all entities to original positions." << std::endl;
+                // std::cout << "Teleporting control entity to spawn point and resetting all
+                // entities to original positions." << std::endl;
 
                 // Reset the control entity to the spawn point
                 otherEntity->setRectX(spawnEntity->getRect().x);
@@ -38,20 +39,22 @@ void DeathHandler::updateGameState(Entity &entity, Game &game) {
                 otherEntity->setVelocityX(0);
                 otherEntity->setVelocityY(0);
 
-                // Reset all entities (including control, death zone, and others) to their original positions
+                // Reset all entities (including control, death zone, and others) to their original
+                // positions
                 for (auto& [entityId, gameEntity] : entities) {
                     if (originalPositions.find(entityId) != originalPositions.end()) {
                         SDL_Rect originalPos = originalPositions[entityId];
                         gameEntity->setRectX(originalPos.x);
                         gameEntity->setRectY(originalPos.y);
-                        //std::cout << "Entity " << entityId << " reset to (" << originalPos.x << ", " << originalPos.y << ")" << std::endl;
+                        // std::cout << "Entity " << entityId << " reset to (" << originalPos.x <<
+                        // ", " << originalPos.y << ")" << std::endl;
                     }
                 }
 
                 return;  // Exit after resetting all entities
-            }
-            else {
-                //std::cerr << "Spawn point with ID " << spawnPointId << " not found!" << std::endl;
+            } else {
+                // std::cerr << "Spawn point with ID " << spawnPointId << " not found!" <<
+                // std::endl;
             }
         }
     }

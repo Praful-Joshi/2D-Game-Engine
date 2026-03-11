@@ -1,7 +1,7 @@
 #include "sideboundary_handler.hpp"
 
-void SideBoundaryHandler::onEvent(const Event &event) {
-    if(event.type == EventType::SIDEBOUNDARY) {
+void SideBoundaryHandler::onEvent(const Event& event) {
+    if (event.type == EventType::SIDEBOUNDARY) {
         auto it = event.parameters.find("ISLEFTBOUNDARY");
         if (it != event.parameters.end() && it->second.type == Variant::Type::BOOL) {
             isLeftBoundary = it->second.asBool;
@@ -10,7 +10,7 @@ void SideBoundaryHandler::onEvent(const Event &event) {
     }
 }
 
-void SideBoundaryHandler::updateGameState(Entity &entity, Game &game) {
+void SideBoundaryHandler::updateGameState(Entity& entity, Game& game) {
     int scrollAmount = isLeftBoundary ? 10 : -10;
 
     auto entities = game.getEntities();
@@ -34,7 +34,8 @@ void SideBoundaryHandler::updateGameState(Entity &entity, Game &game) {
             }
             // Scroll all entities horizontally by scrollAmount
             for (auto& [entityId, gameEntity] : entities) {
-                if (gameEntity->getEntityID() != entity.getEntityID() && !game.entityHasProperty(Property::SideBoundary, gameEntity->getEntityID())) {
+                if (gameEntity->getEntityID() != entity.getEntityID() &&
+                    !game.entityHasProperty(Property::SideBoundary, gameEntity->getEntityID())) {
                     gameEntity->setRectX(gameEntity->getRect().x + scrollAmount);
                 }
             }

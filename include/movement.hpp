@@ -4,8 +4,8 @@
 
 #include "attribute.hpp"
 #include "entity.hpp"
-#include "platform.hpp"
 #include "game.hpp"
+#include "platform.hpp"
 
 class MovementAttribute : public Attribute {
 public:

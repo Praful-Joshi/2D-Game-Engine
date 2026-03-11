@@ -3,10 +3,7 @@
 
 #include "entity.hpp"
 
-enum class ScalingMode {
-    ConstantSize,
-    Proportional
-};
+enum class ScalingMode { ConstantSize, Proportional };
 
 void updateWindowSize(SDL_Window* window, int cur_w, int cur_h);
 

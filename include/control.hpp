@@ -10,4 +10,4 @@ public:
     void update(Entity& entity, Game& game) override;
 };
 
-#endif // CONTROL_ATTRIBUTE_HPP
+#endif  // CONTROL_ATTRIBUTE_HPP

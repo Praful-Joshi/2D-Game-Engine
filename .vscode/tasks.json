@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CMake Configure",
+      "type": "shell",
+      "command": "cmake -S . -B build",
+      "group": "build",
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "cmake --build build -j$(sysctl -n hw.logicalcpu)",
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": ["$gcc"],
+      "dependsOn": "CMake Configure"
+    },
+    {
+      "label": "Run",
+      "type": "shell",
+      "command": "./build/main masterPeer",
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": [],
+      "dependsOn": "Build"
+    },
+    {
+      "label": "Clean",
+      "type": "shell",
+      "command": "cmake --build build --target clean",
+      "group": "build",
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Format All",
+      "type": "shell",
+      "command": "find ${workspaceFolder} \\( -name '*.cpp' -o -name '*.hpp' \\) -not -path '*/build/*' | xargs clang-format -i",
+      "group": "build",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
+    }
+  ]
+}
