@@ -36,3 +36,6 @@ _deps/
 *.clang_complete
 .cache/
 personal_docs
+
+# vcpkg on Windows
+vcpkg_installed/

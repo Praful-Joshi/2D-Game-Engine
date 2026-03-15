@@ -68,28 +68,22 @@ Built as a graduate course project, now being actively developed toward professi
 | cppzmq | any | `brew install cppzmq` | `sudo apt install libcppzmq-dev` | `vcpkg install cppzmq` |
 | Boost | 1.70+ | `brew install boost` | `sudo apt install libboost-dev` | `vcpkg install boost` |
 
-### macOS & Linux
+## Building
+
+**First time setup (run once):**
 ```bash
-git clone https://github.com/Praful-Joshi/2D-Game-Engine.git
-cd 2D-Game-Engine
-mkdir build && cd build
-cmake ..
-cmake --build . -j$(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
-./main masterPeer
+# macOS / Linux
+./scripts/setup.sh
+
+# Windows (PowerShell as Administrator)
+powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
 ```
 
-### Windows (with vcpkg)
-```powershell
-git clone https://github.com/Praful-Joshi/2D-Game-Engine.git
-cd 2D-Game-Engine
-
-# Install dependencies via vcpkg
-vcpkg install sdl2 zeromq cppzmq boost
-
-mkdir build && cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=path\to\vcpkg\scripts\buildsystems\vcpkg.cmake
-cmake --build . --config Release
-.\Release\main.exe masterPeer
+**Every build after that:**
+```bash
+cmake -B build
+cmake --build build -j$(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
+./build/bin/nova2d_game
 ```
 
 ### VS Code
