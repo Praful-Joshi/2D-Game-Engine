@@ -5,9 +5,18 @@ add_library(nova2d_engine STATIC
     core/Engine.cpp
 )
 
+# Detect Homebrew prefix (handles both Intel /usr/local and Apple Silicon /opt/homebrew)
+execute_process(
+    COMMAND brew --prefix
+    OUTPUT_VARIABLE HOMEBREW_PREFIX
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+
 target_include_directories(nova2d_engine
-    PUBLIC  "${CMAKE_CURRENT_SOURCE_DIR}"   # so #include "core/Logger.hpp" works
+    PUBLIC  "${CMAKE_CURRENT_SOURCE_DIR}"
     PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}"
+            $<$<BOOL:${HOMEBREW_PREFIX}>:${HOMEBREW_PREFIX}/include>
 )
 
 target_link_libraries(nova2d_engine

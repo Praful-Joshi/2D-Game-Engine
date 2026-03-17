@@ -6,7 +6,8 @@ function(set_project_warnings target)
         >
         $<$<CXX_COMPILER_ID:MSVC>:
             /W4
-            /wd4100  # unreferenced formal parameter
+            /wd4100
+            /utf-8      # ← fixes the Windows fmt/spdlog unicode error
         >
     )
 endfunction()
