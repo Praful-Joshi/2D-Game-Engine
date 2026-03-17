@@ -21,7 +21,7 @@ target_include_directories(nova2d_engine
 
 target_link_libraries(nova2d_engine
     PUBLIC  SDL2::SDL2
-    PRIVATE spdlog::spdlog
+    PRIVATE spdlog::spdlog_header_only   # ← header-only avoids DLL linkage conflict
 )
 
 set_project_warnings(nova2d_engine)

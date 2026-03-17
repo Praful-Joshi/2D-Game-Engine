@@ -31,6 +31,7 @@ _deps/
 .DS_Store
 .AppleDouble
 *.dSYM/
+cmake/BrewHints.cmake
 
 # ── Clang ──────────────────────────────────────────────────────────────────────
 *.clang_complete
